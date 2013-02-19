@@ -143,6 +143,7 @@ function handleSubmit(event, container, options) {
 //             $(container).html(xhr.responseBody)
 //      push - Whether to pushState the URL. Defaults to true (of course).
 //   replace - Want to use replaceState instead? That's cool.
+//    insert - How to insert the new html: 'html' (default), 'append', or 'prepend'
 //
 // Use it just like $.ajax:
 //
@@ -244,7 +245,13 @@ function pjax(options) {
     }
 
     if (container.title) document.title = container.title
-    context.html(container.contents)
+    if (options.insert === 'append') {
+      context.append(container.contents)
+    } else if (options.insert === 'prepend') {
+      context.prepend(container.contents)
+    } else {
+      context.html(container.contents)
+    }
 
     // Scroll to top by default
     if (typeof options.scrollTo === 'number')

@@ -613,6 +613,11 @@ function extractContainer(data, xhr, options) {
 
   } else if (!/<html/i.test(data)) {
     obj.contents = $body
+
+    // If there's no title, look for data-title and title attributes
+    // on the body
+    if (!obj.title)
+      obj.title = $body.attr('title') || $body.data('title')
   }
 
   // Clean up any <title> tags

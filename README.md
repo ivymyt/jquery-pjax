@@ -130,7 +130,7 @@ This will enable pjax on all links and designate the container as `#pjax-contain
 
 If you are migrating an existing site you probably don't want to enable pjax everywhere just yet. Instead of using a global selector like `a` try annotating pjaxable links with `data-pjax`, then use `'a[data-pjax]'` as your selector.
 
-Or try this selector thats matches any `<a data-pjax href=>` links inside a `<div data-pjax>` container.
+Or try this selector that matches any `<a data-pjax href=>` links inside a `<div data-pjax>` container.
 
 ``` javascript
 $(document).pjax('[data-pjax] a, a[data-pjax]', '#pjax-container')
@@ -242,6 +242,26 @@ end
 An `X-PJAX` request header is set to differentiate a pjax request from normal XHR requests. In this case, if the request is pjax, we skip the layout html and just render the inner contents of the container.
 
 Check if your favorite server framework supports pjax here: https://gist.github.com/4283721
+
+#### Layout Reloading
+
+Layouts can be forced to do a hard reload assets or html changes.
+
+First set the initial layout version in your header with a custom meta tag.
+
+``` html
+<meta http-equiv="x-pjax-version" content="v123">
+```
+
+Then from the server side, set the `X-PJAX-Version` header to the same.
+
+``` ruby
+if request.headers['X-PJAX']
+  response.headers['X-PJAX-Version'] = "v123"
+end
+```
+
+Deploying a deploy, bumping the version constant to force clients to do a full reload the next request getting the new layout and assets.
 
 ### Legacy API
 

@@ -35,6 +35,7 @@ if ($.support.pjax) {
 
     frame.$('#main').on('pjax:success', function() {
       equal(frame.$("#main > p").html().trim(), "Hello!")
+      equal(frame.$("#main").contents().eq(1).text().trim(), "How's it going?")
       start()
     })
     frame.$.pjax({
@@ -115,6 +116,20 @@ if ($.support.pjax) {
       url: "long.html",
       container: "#main",
       scrollTo: false
+    })
+  })
+
+  asyncTest("evals scripts", function() {
+    var frame = this.frame
+
+    frame.evaledScriptLoaded = function() {
+      equal(true, frame.evaledSrcScript)
+      equal(true, frame.evaledInlineScript)
+      start()
+    }
+    frame.$.pjax({
+      url: "scripts.html",
+      container: "#main"
     })
   })
 
@@ -390,6 +405,23 @@ if ($.support.pjax) {
 
     frame.$.pjax({
       url: "hello.html?layout=true",
+      container: "#main"
+    })
+
+    this.iframe.onload = function() {
+      equal(frame.$("#main p").html(), "Hello!")
+      equal(frame.location.pathname, "/hello.html")
+      start()
+    }
+  })
+
+  asyncTest("header version mismatch does a full load", function() {
+    var frame = this.frame
+
+    frame.$.pjax.defaults.version = 'v2'
+
+    frame.$.pjax({
+      url: "hello.html",
       container: "#main"
     })
 
